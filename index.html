@@ -226,7 +226,7 @@ const ayarV=()=>'<div class="hd" style="margin-top:0"><h2>Ayarlar</h2></div>'+
   '<label><span class="lb">Servis adresi</span><input class="in" data-k="smsUrl" placeholder="https://…vercel.app/api/sms" value="'+esc(db.ayar.smsUrl)+'"></label>'+
   '<label><span class="lb">Erişim anahtarı</span><input class="in" type="password" data-k="smsToken" value="'+esc(db.ayar.smsToken)+'"></label>'+
   '<label><span class="lb">Gönderim saati (randevudan bir gün önce)</span><input class="in" type="time" data-k="smsSaat" value="'+esc(sa('smsSaat'))+'"></label>'+
-  '<label class="fw"><span class="lb">Mesaj metni</span><textarea class="in" data-k="smsSablon">'+esc(sa('smsSablon'))+'</textarea><small>{ad}, {tarih}, {saat} ve {klinik} yerine ilgili bilgiler yazılır. Telefon numarası olmayan hastalara SMS gitmez.</small></label></div>'+
+  '<label class="fw"><span class="lb">Mesaj metni</span><textarea class="in" data-k="smsSablon">'+esc(sa('smsSablon'))+'</textarea><small>{ad}, {tarih}, {saat} ve {klinik} yerine ilgili bilgiler yazılır. Telefon numarası olmayan hastalara SMS gitmez.</small></label><div class="fw"><button type="button" class="btn b2" data-a="smsTest">Test SMS gönder</button></div></div>'+
   '<div class="card"><h3>Yedek</h3><p><small>Veriler yalnızca bu cihazın tarayıcısında saklanır, sunucuya gönderilmez. Başka cihaza taşımak için yedek alın.</small></p><div class="bt" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn" data-a="yedek">Dosyaya yedekle</button><button class="btn b2" data-a="yukle">Yedeği yükle</button><input type="file" id="yf" accept=".json" hidden></div></div>'+
   '<div class="card"><h3>Gizlilik</h3><small>Yedek dosyası sağlık verisi ve TC kimlik numaraları içerir (KVKK kapsamında özel nitelikli kişisel veri). Dosyayı güvenli saklayın, GitHub deposuna yüklemeyin. Ortak bir bilgisayarda çalışıyorsanız işiniz bitince tarayıcı verilerini temizleyin.</small></div>'+
   '<div class="card"><button class="btn b2" data-a="sil" style="color:var(--red)">Tüm verileri sil</button></div>';
@@ -286,9 +286,9 @@ function muayeneForm(id,pid,r){
 const DEF={smsSaat:'10:00',smsSablon:'Sayın {ad}, {tarih} saat {saat} için {klinik} randevunuzu hatırlatırız. Gelemeyecekseniz lütfen önceden haber veriniz.'};
 const sa=k=>db.ayar[k]||DEF[k];
 const pad=n=>String(n).padStart(2,'0');
-const smsN=r=>r.sms?(r.sms.durum==='hata'?' · SMS gönderilemedi':' · SMS planlandı'):'';
+const smsN=r=>r.sms?(r.sms.durum==='hata'?' · SMS gönderilemedi: '+esc(r.sms.hata||''):' · SMS planlandı'):'';
 const dupMsg=c=>'Bu TC kimlik numarası zaten kayıtlı: <b>'+esc(c.ad)+'</b>. Aynı hasta ikinci kez eklenemez.<br><button type="button" class="btn b2" data-a="ac" data-i="'+c.id+'" style="margin-top:8px">Mevcut hastayı aç</button>';
-const smsApi=b=>fetch(db.ayar.smsUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(db.ayar.smsToken||'')},body:JSON.stringify(b)}).then(r=>r.json().catch(()=>({})).then(j=>{if(!r.ok||!j.ok)throw new Error(j.hata||'SMS servisi yanıt vermedi');return j}));
+const smsApi=b=>fetch(db.ayar.smsUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(db.ayar.smsToken||'')},body:JSON.stringify(b)}).catch(()=>{throw new Error('Servise ulaşılamadı. Adresi ve ALLOWED_ORIGIN değerini kontrol edin.')}).then(r=>r.json().catch(()=>({})).then(j=>{if(!r.ok||!j.ok)throw new Error(j.hata||'SMS servisi yanıt vermedi');return j}));
 function smsIptal(r){if(r&&r.sms){if(r.sms.id&&db.ayar.smsUrl)smsApi({islem:'iptal',id:r.sms.id}).catch(()=>{});delete r.sms}}
 function smsGuncelle(r){
   const p=hp(r.pid)||{},g=r.tarih.slice(0,10),now=new Date();
@@ -333,6 +333,7 @@ document.addEventListener('click',e=>{
   const i=el.dataset.i,A={
     nav:()=>{ui.tab=el.dataset.t;render()},
     tamam:()=>{const r=db.randevu.find(x=>x.id===i);if(r){r.durum='bitti';smsIptal(r);save()}kapat();render()},
+    smsTest:()=>{if(!db.ayar.smsUrl)return alert('Önce servis adresini girin.');const t=prompt('Test mesajının gönderileceği cep telefonu (örn. 0532 000 00 00):');if(!t)return;smsApi({islem:'planla',tel:t,mesaj:'Hasta Takip test mesajı. SMS hatırlatma çalışıyor.',zaman:''}).then(j=>alert('Test mesajı gönderildi (sipariş no: '+j.id+'). Telefonunuza gelmesini bekleyin.')).catch(e=>alert('Gönderilemedi: '+e.message))},
     ac:()=>{kapat();ui.sel=i;ui.tab='takip';render()},
     gun:()=>{setGun(i);render()},gd:()=>{setGun(gunEkle(ui.gun,Number(i)));render()},
     ayg:()=>{const d=new Date(ui.cy,ui.cm+Number(i),1);ui.cy=d.getFullYear();ui.cm=d.getMonth();render()},
