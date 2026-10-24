@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f0ea">
+<title>Hasta Takip</title>
+<style>
+:root{--bg:#f5f0ea;--ink:#1d1b19;--mu:#6e6862;--ln:#e8e0d6;--red:#c8372d;--navy:#1f3558;--gr:#2f8f5b;--grb:#e4f2ea;--bl:#e6ebf5;--yl:#fbf0d9}
+*{box-sizing:border-box;margin:0}
+body{font:15px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--navy)}
+small{color:var(--mu);font-size:13px}
+h2{font-size:21px}h3{font-size:17px}
+#app{display:flex;min-height:100vh}
+main{flex:1;min-width:0;max-width:600px;margin:0 auto;padding:14px 14px calc(110px + env(safe-area-inset-bottom))}
+.side{display:none}
+.top{display:flex;gap:11px;align-items:center;margin-bottom:14px}
+.top b{display:block;font-size:17px}
+.lg{width:36px;height:36px;border-radius:10px;background:var(--red);color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
+.card{background:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 1px 3px #0000000d;margin-bottom:12px}
+.bnr{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--yl);border-radius:14px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:#5a4a1c}
+.bnr button{background:#fff;border:0;border-radius:10px;padding:8px 12px;font-weight:700;white-space:nowrap}
+.st{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.st .card{margin:0}
+.lb{font-size:13px;font-weight:700;color:var(--mu)}
+.big{font-size:30px;font-weight:800;line-height:1.2}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:18px 0 10px}
+.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:700;background:var(--red);color:#fff}
+.b2{background:#fff;color:var(--ink);border:1.5px solid var(--ln)}
+.in{width:100%;padding:11px 13px;border:1.5px solid var(--ln);border-radius:12px;background:#fff}
+.in:focus,.btn:focus-visible,.nv:focus-visible{outline:2px solid var(--red);outline-offset:1px}
+textarea.in{resize:vertical;min-height:84px}
+.vr{display:flex;gap:14px;align-items:center;background:#fff;border-radius:14px;padding:13px 14px;margin-bottom:10px;border-left:5px solid var(--gr);cursor:pointer;box-shadow:0 1px 3px #0000000d}
+.vr b{font-weight:700}
+.tm{font-size:19px;font-weight:800;min-width:54px}
+.gr{flex:1;min-width:0}
+.gr small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pi{border-left:0}
+.pi.on{outline:2px solid var(--red)}
+.av{width:42px;height:42px;border-radius:50%;background:var(--bl);color:var(--navy);display:grid;place-items:center;font-weight:800;flex:none}
+.lgav{width:56px;height:56px;font-size:23px}
+.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.ig p{font-weight:600}
+.nt{background:var(--yl);border-radius:12px;padding:10px 12px;margin-top:12px;font-size:14px}
+.vc{background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:10px;border-left:5px solid var(--navy);cursor:pointer;box-shadow:0 1px 3px #0000000d}
+.vh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.f span{font-size:13px;font-weight:700;color:var(--mu)}
+.f p{white-space:pre-wrap;margin:2px 0 10px}
+.chip{border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;background:var(--grb);color:var(--gr)}
+.bn{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--ln);display:grid;grid-template-columns:1fr 1fr 78px 1fr 1fr;padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:5}
+.nv{border:0;background:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:600;color:var(--mu)}
+.nv.on{color:var(--red)}
+svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.fab{width:62px;height:62px;border-radius:50%;border:0;background:var(--red);color:#fff;margin:-32px auto 0;box-shadow:0 6px 18px #c8372d66;display:grid;place-items:center}
+.fab svg{width:30px;height:30px}
+#ov{display:none;position:fixed;inset:0;background:#0006;z-index:20;align-items:flex-end;justify-content:center}
+#ov.on{display:flex}
+.sh{background:var(--bg);width:100%;max-width:780px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom))}
+.x{border:0;background:#fff;border-radius:10px;width:36px;height:36px;font-size:22px}
+.fg{display:grid;gap:12px}
+.fg label{display:grid;gap:5px}
+.er{color:var(--red);font-weight:600;margin-top:10px}
+.bt{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+.bt .btn{min-width:120px}
+.bt .dl{margin-right:auto;min-width:0;color:var(--red)}
+.c-bitti{background:var(--grb);color:var(--gr)}
+.c-bekliyor{background:var(--bl);color:var(--navy)}
+.c-sr{background:#fbe3e0;color:var(--red)}
+.c-iptal{background:#eee;color:var(--mu)}
+.r-bekliyor{border-left-color:var(--navy)}
+.r-sr{border-left-color:var(--red);outline:2px solid var(--red)}
+.r-iptal{border-left-color:#bbb;opacity:.65}
+.sx{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:4px}
+.sx .big{font-size:24px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sat{font-size:27px;font-weight:800;color:var(--red)}
+.rv{max-width:820px}
+.ds{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;margin:14px -14px 0;padding:4px 14px 8px;scrollbar-width:none}
+.ds::-webkit-scrollbar{display:none}
+.dy{flex:none;width:58px;border:0;background:#fff;border-radius:14px;padding:9px 0 7px;display:grid;justify-items:center;gap:1px;box-shadow:0 1px 3px #0000000d;scroll-snap-align:center;color:var(--ink)}
+.dy small{font-weight:600}
+.dy b{font-size:21px;line-height:1.2}
+.dy i{font-style:normal;color:var(--red);font-size:11px;letter-spacing:1px;min-height:14px;line-height:14px}
+.dy.on{background:var(--ink);color:#fff}
+.dy.on small{color:#ddd}.dy.on i{color:#fff}
+.gear{margin-left:auto;width:44px;height:44px;border:0;border-radius:14px;background:#fff;display:grid;place-items:center;box-shadow:0 1px 3px #0000000d;color:var(--ink)}
+.cn{display:flex;gap:8px;margin-bottom:12px}
+.cn select{flex:1;min-width:0}
+.cn .btn{width:46px;padding:0;font-size:20px}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.wd{text-align:center;font-size:12px;font-weight:700;color:var(--mu);padding:4px 0}
+.cd{border:0;background:#faf7f3;border-radius:12px;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:15px;color:var(--ink)}
+.cd.td{outline:2px solid var(--navy)}
+.cd.on{background:var(--ink);color:#fff}
+.cd span{background:var(--red);color:#fff;border-radius:999px;font-size:11px;font-weight:700;padding:0 7px;line-height:17px}
+.ok{flex:none;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--gr);background:#fff;color:var(--gr);font-size:17px;font-weight:700;line-height:1}
+.pg{background:#fff;border-radius:10px;padding:8px 12px;margin-top:8px;color:var(--ink);font-weight:500;font-size:14px}
+.pg div{display:flex;gap:12px;padding:3px 0}
+.pg .cf{color:var(--red);font-weight:700}
+@media(max-width:699px){.gd{display:none}}
+@media(min-width:980px){.tk{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:26px;align-items:start}.cd{min-height:80px}}
+@media(min-width:700px){.fg{grid-template-columns:1fr 1fr}.fw{grid-column:1/-1}}
+@media(max-width:979px){.s-h .pd,.s-t .pl{display:none}}
+@media(min-width:980px){
+.side{display:flex;flex-direction:column;gap:6px;width:222px;padding:24px 14px;position:sticky;top:0;height:100vh;flex:none}
+.bn,.bk,.gear{display:none}
+main{max-width:1280px;padding:26px 34px 40px}
+.split{display:grid;grid-template-columns:340px 1fr;gap:26px;align-items:start}
+.pl{position:sticky;top:20px;max-height:calc(100vh - 40px);overflow:auto;padding:2px}
+.fs{display:grid;grid-template-columns:repeat(3,1fr);gap:0 20px}
+.side .nv{flex-direction:row;gap:12px;padding:11px 13px;border-radius:12px;font-size:15px}
+.side .nv.on,#app[data-t=takip] .side .nv[data-t=hastalar]{background:#fff;color:var(--red)}
+.side .nv[data-t=takip]{display:none}
+#ov{align-items:center}.sh{border-radius:22px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="ov"></div>
+<script>
+const K='hastaTakip.v1',$=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const trd=s=>s?s.slice(8,10)+'.'+s.slice(5,7)+'.'+s.slice(0,4):'';
+const uid=()=>Math.random().toString(36).slice(2,10);
+const yas=d=>{if(!d)return'';const b=new Date(d),n=new Date();let a=n.getFullYear()-b.getFullYear();if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))a--;return a+' yaş'};
+const tcOk=t=>{if(!/^[1-9]\d{10}$/.test(t))return false;const d=[...t].map(Number);return(((d[0]+d[2]+d[4]+d[6]+d[8])*7-(d[1]+d[3]+d[5]+d[7]))%10+10)%10===d[9]&&d.slice(0,10).reduce((a,b)=>a+b)%10===d[10]};
+const IC={cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/>',sl:'<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',plus:'<path d="M12 5v14M5 12h14"/>',grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>'};
+const ic=n=>'<svg viewBox="0 0 24 24">'+IC[n]+'</svg>';
+
+function ornek(){
+  const t=iso(new Date()),d=n=>{const x=new Date();x.setDate(x.getDate()+n);return iso(x)};
+  return{ornek:true,randevu:[
+      {id:'r1',pid:'h1',tarih:t+'T09:30',neden:'Baş ağrısı kontrolü',durum:'bitti'},
+      {id:'r2',pid:'h2',tarih:t+'T10:15',neden:'Sırt ağrısı',durum:'bitti'},
+      {id:'r3',pid:'h3',tarih:t+'T14:00',neden:'Boğaz enfeksiyonu kontrolü',durum:'bekliyor'},
+      {id:'r4',pid:'h1',tarih:t+'T15:30',neden:'Tansiyon takibi',durum:'bekliyor'},
+      {id:'r5',pid:'h2',tarih:t+'T16:30',neden:'Tetkik sonuçları',durum:'bekliyor'},
+      {id:'r6',pid:'h3',tarih:d(1)+'T09:00',neden:'Aşı',durum:'bekliyor'},
+      {id:'r7',pid:'h1',tarih:d(1)+'T11:00',neden:'Ödem şikâyeti',durum:'bekliyor'},
+      {id:'r8',pid:'h2',tarih:d(3)+'T10:00',neden:'Bel ağrısı kontrolü',durum:'bekliyor'},
+      {id:'r9',pid:'h1',tarih:d(7)+'T09:30',neden:'Kontrol',durum:'bekliyor'},
+      {id:'r10',pid:'h2',tarih:d(14)+'T10:15',neden:'Kontrol',durum:'bekliyor'},
+      {id:'r11',pid:'h3',tarih:d(-2)+'T13:00',neden:'Ateş şikâyeti',durum:'bitti'}],
+    ayar:{klinik:'Dr. Deniz Muayenehanesi',doktor:'Dr. Deniz Yılmaz'},
+    hasta:[
+      {id:'h1',ad:'Ayşe Kaya',tc:'11111111110',dogum:'1985-04-12',tel:'0532 000 00 01',cins:'Kadın',not:'Penisilin alerjisi. Hipertansiyon.'},
+      {id:'h2',ad:'Mehmet Demir',tc:'',dogum:'1972-09-03',tel:'0533 000 00 02',cins:'Erkek',not:''},
+      {id:'h3',ad:'Elif Arslan',tc:'',dogum:'2015-01-20',tel:'0534 000 00 03',cins:'Kadın',not:''}],
+    muayene:[
+      {id:'m1',pid:'h1',tarih:t+'T09:30',sikayet:'Baş ağrısı, halsizlik',tetkik:'Tam kan sayımı, TSH, B12',bulgu:'TA 150/90 mmHg. Konjonktivalar soluk. Ateş yok.',islem:'Antihipertansif dozu ayarlandı. Tetkikler istendi.',kontrol:d(7)},
+      {id:'m2',pid:'h2',tarih:t+'T10:15',sikayet:'Bel ve sırt ağrısı',tetkik:'Lomber grafi',bulgu:'Paravertebral kas spazmı var. SLR negatif.',islem:'Kas gevşetici başlandı, sıcak uygulama önerildi.',kontrol:d(14)},
+      {id:'m3',pid:'h3',tarih:d(-10)+'T14:00',sikayet:'Ateş, boğaz ağrısı',tetkik:'Hızlı strep testi',bulgu:'Tonsiller hiperemik. Ateş 38,4 °C.',islem:'Antibiyotik tedavisi başlandı.',kontrol:''},
+      {id:'m4',pid:'h1',tarih:d(-30)+'T11:00',sikayet:'Rutin tansiyon kontrolü',tetkik:'Kreatinin, lipid paneli',bulgu:'TA 140/90 mmHg. Tetkikler normal sınırlarda.',islem:'Mevcut tedaviye devam.',kontrol:''}]};
+}
+let db;try{db=JSON.parse(localStorage.getItem(K))}catch(e){}
+if(!db||!db.hasta||(db.ornek&&!db.randevu))db=ornek();db.randevu=db.randevu||[];
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(db))}catch(e){alert('Veriler kaydedilemedi. Tarayıcı depolaması kapalı olabilir.')}};
+const ui={tab:'randevu',sel:null,q:'',gun:iso(new Date()),cy:new Date().getFullYear(),cm:new Date().getMonth()};
+const hp=id=>db.hasta.find(p=>p.id===id);
+
+const vr=(m,l)=>'<div class="vr" data-a="sel" data-i="'+m.pid+'"><b class="tm">'+l+'</b><div class="gr"><b>'+esc((hp(m.pid)||{}).ad)+'</b><small>'+esc(m.sikayet||m.islem)+'</small></div></div>';
+const f=(l,v)=>v?'<div class="f"><span>'+l+'</span><p>'+esc(v)+'</p></div>':'';
+const vc=m=>'<div class="vc" data-a="duzM" data-i="'+m.id+'"><div class="vh"><b>'+trd(m.tarih.slice(0,10))+' · '+m.tarih.slice(11,16)+'</b>'+(m.kontrol?'<span class="chip">Kontrol '+trd(m.kontrol)+'</span>':'')+'</div>'+f('Şikâyet',m.sikayet)+'<div class="fs">'+f('İstenen tetkik',m.tetkik)+f('Bulgu',m.bulgu)+f('Yapılan işlem',m.islem)+'</div></div>';
+const bos=t=>'<div class="card"><small>'+t+'</small></div>';
+
+const GUN=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'],AY=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const DL={bekliyor:'bekliyor',bitti:'tamamlandı',iptal:'iptal'};
+const gunEkle=(g,n)=>{const d=new Date(g+'T12:00');d.setDate(d.getDate()+n);return iso(d)};
+const setGun=g=>{ui.gun=g;ui.cy=+g.slice(0,4);ui.cm=+g.slice(5,7)-1};
+const rg=g=>db.randevu.filter(r=>r.tarih.slice(0,10)===g).sort((a,b)=>a.tarih<b.tarih?-1:1);
+const rc=(r,sid)=>{const p=hp(r.pid)||{},s=r.durum==='bekliyor'&&r.id===sid?'sr':r.durum;
+  return '<div class="vr r-'+s+'" data-a="duzR" data-i="'+r.id+'"><b class="tm">'+r.tarih.slice(11,16)+'</b><div class="gr"><b>'+esc(p.ad)+'</b><small>'+esc(r.neden)+smsN(r)+'</small></div><span class="chip c-'+s+'">'+(s==='sr'?'sıradaki':DL[r.durum])+'</span>'+(r.durum==='bekliyor'?'<button class="ok" data-a="tamam" data-i="'+r.id+'" aria-label="Tamamlandı">✓</button>':'')+'</div>'};
+function gunListe(g){
+  const L=rg(g),t=iso(new Date()),sr=g===t?(L.find(r=>r.durum==='bekliyor')||{}).id:null,
+    b=L.filter(r=>r.durum==='bitti').length,w=L.filter(r=>r.durum==='bekliyor').length;
+  return '<div data-sw style="min-height:42vh"><div class="hd"><div><h2>'+(g===t?'Bugün':new Date(g+'T12:00').toLocaleDateString('tr-TR',{day:'numeric',month:'long',weekday:'long'}))+'</h2><small>'+L.length+' randevu'+(L.length?' · '+b+' tamamlandı · '+w+' bekliyor':'')+'</small></div>'+
+    '<div style="display:flex;gap:8px"><button class="btn b2 gd" data-a="gd" data-i="-1" aria-label="Önceki gün">‹</button><button class="btn b2 gd" data-a="gd" data-i="1" aria-label="Sonraki gün">›</button><button class="btn" data-a="yeniR" data-g="'+g+'">+ Randevu</button></div></div>'+
+    (L.map(r=>rc(r,sr)).join('')||bos('Bu gün için randevu yok. “+ Randevu” ile ekleyin; sağa veya sola kaydırarak diğer günlere geçebilirsiniz.'))+'</div>';
+}
+function randevuV(){
+  const t=iso(new Date()),g=ui.gun,T=rg(t),Y=rg(gunEkle(t,1)),sr=T.find(r=>r.durum==='bekliyor'),
+    b=T.filter(r=>r.durum==='bitti').length,w=T.filter(r=>r.durum==='bekliyor').length;
+  if(!ui.ank||g<gunEkle(ui.ank,-14)||g>gunEkle(ui.ank,60))ui.ank=g;
+  let S='';
+  for(let i=-14;i<=60;i++){const d=gunEkle(ui.ank,i),n=rg(d).length;
+    S+='<button class="dy'+(d===g?' on':'')+'" data-a="gun" data-i="'+d+'"><small>'+(d===t?'Bugün':GUN[new Date(d+'T12:00').getDay()])+'</small><b>'+Number(d.slice(8))+'</b><i>'+'•'.repeat(Math.min(n,5))+'</i></button>'}
+  return '<div class="rv"><div class="st"><div class="card"><div class="lb">Bugün</div><div class="big">'+T.length+'</div><small>'+b+' tamamlandı · '+w+' bekliyor</small></div>'+
+    '<div class="card"><div class="lb">Yarın</div><div class="big">'+Y.length+'</div><small>'+(Y[0]?'ilk randevu '+Y[0].tarih.slice(11,16):'randevu yok')+'</small></div></div>'+
+    (sr?'<div class="card" data-a="duzR" data-i="'+sr.id+'" style="cursor:pointer;margin-top:12px"><div class="lb">Sıradaki</div><div class="sx"><div class="gr"><div class="big">'+esc((hp(sr.pid)||{}).ad)+'</div><small>'+esc(sr.neden)+'</small></div><b class="sat">'+sr.tarih.slice(11,16)+'</b></div></div>'
+      :'<div class="card" style="margin-top:12px"><div class="lb">Sıradaki</div><small>Bugün için bekleyen randevu yok.</small></div>')+
+    '<div class="ds">'+S+'</div>'+gunListe(g)+'</div>';
+}
+function takvimV(){
+  const y=ui.cy,m=ui.cm,t=iso(new Date()),bs=(new Date(y,m,1).getDay()+6)%7,gn=new Date(y,m+1,0).getDate(),p2=n=>String(n).padStart(2,'0');
+  let C=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'].map(x=>'<div class="wd">'+x+'</div>').join('')+'<i></i>'.repeat(bs),Y='';
+  for(let d=1;d<=gn;d++){const k=y+'-'+p2(m+1)+'-'+p2(d),n=rg(k).length;
+    C+='<button class="cd'+(k===t?' td':'')+(k===ui.gun?' on':'')+'" data-a="gun" data-i="'+k+'"><b>'+d+'</b>'+(n?'<span>'+n+'</span>':'')+'</button>'}
+  for(let i=y-5;i<=y+5;i++)Y+='<option'+(i===y?' selected':'')+'>'+i+'</option>';
+  return '<div class="tk"><div class="card"><div class="cn"><button class="btn b2" data-a="ayg" data-i="-1" aria-label="Önceki ay">‹</button><select class="in" id="cm" aria-label="Ay">'+AY.map((a,i)=>'<option value="'+i+'"'+(i===m?' selected':'')+'>'+a+'</option>').join('')+'</select><select class="in" id="cy" aria-label="Yıl">'+Y+'</select><button class="btn b2" data-a="ayg" data-i="1" aria-label="Sonraki ay">›</button></div><div class="cg">'+C+'</div></div><div>'+gunListe(ui.gun)+'</div></div>';
+}
+const lis=()=>{const q=ui.q.toLocaleLowerCase('tr');
+  return db.hasta.filter(p=>(p.ad+' '+p.tc+' '+p.tel).toLocaleLowerCase('tr').includes(q)).sort((a,b)=>a.ad.localeCompare(b.ad,'tr')).map(p=>{
+    const son=db.muayene.filter(m=>m.pid===p.id).map(m=>m.tarih).sort().pop();
+    return '<div class="vr pi'+(p.id===ui.sel?' on':'')+'" data-a="sel" data-i="'+p.id+'"><div class="av">'+esc(p.ad[0]||'?')+'</div><div class="gr"><b>'+esc(p.ad)+'</b><small>'+esc([yas(p.dogum),p.tel].filter(Boolean).join(' · '))+(son?' · son: '+trd(son.slice(0,10)):'')+'</small></div></div>';
+  }).join('')||bos('Hasta bulunamadı. Yeni hasta eklemek için “+ Hasta” düğmesini kullanın.')};
+const listV=()=>'<div class="hd" style="margin-top:0"><h2>Hastalar</h2><button class="btn" data-a="yeniH">+ Hasta</button></div><input class="in" id="q" placeholder="Ad, TC veya telefon ara" value="'+esc(ui.q)+'" style="margin-bottom:12px"><div id="ll">'+lis()+'</div>';
+
+function detV(){
+  const p=hp(ui.sel);
+  if(!p)return '<div class="hd" style="margin-top:0"><h2>Son muayeneler</h2></div>'+([...db.muayene].sort((a,b)=>a.tarih<b.tarih?1:-1).slice(0,12).map(m=>vr(m,trd(m.tarih.slice(0,10)).slice(0,5))).join('')||bos('Henüz muayene kaydı yok. Önce bir hasta ekleyin.'));
+  const ms=db.muayene.filter(m=>m.pid===p.id).sort((a,b)=>a.tarih<b.tarih?1:-1);
+  return '<button class="btn b2 bk" data-a="geri" style="margin-bottom:12px">← Hastalar</button>'+
+    '<div class="card"><div style="display:flex;gap:14px;align-items:center"><div class="av lgav">'+esc(p.ad[0])+'</div><div class="gr"><h2>'+esc(p.ad)+'</h2><small>'+esc([yas(p.dogum),p.cins].filter(Boolean).join(' · '))+'</small></div><button class="btn b2" data-a="duzH" data-i="'+p.id+'">Düzenle</button></div>'+
+    '<div class="ig" style="margin-top:14px"><div><div class="lb">TC kimlik no</div><p>'+(esc(p.tc)||'—')+'</p></div><div><div class="lb">Doğum tarihi</div><p>'+(trd(p.dogum)||'—')+'</p></div><div><div class="lb">Telefon</div><p>'+(p.tel?'<a href="tel:'+esc(p.tel)+'">'+esc(p.tel)+'</a>':'—')+'</p></div></div>'+
+    (p.not?'<div class="nt"><b>Alerji / kronik hastalık:</b> '+esc(p.not)+'</div>':'')+'</div>'+
+    '<div class="hd"><h3>Muayene geçmişi <small>('+ms.length+')</small></h3><div style="display:flex;gap:8px"><button class="btn b2" data-a="yeniR">+ Randevu</button><button class="btn" data-a="yeniM" data-i="'+p.id+'">+ Muayene</button></div></div>'+
+    (ms.map(vc).join('')||bos('Bu hasta için henüz muayene kaydı yok.'));
+}
+const ayarV=()=>'<div class="hd" style="margin-top:0"><h2>Ayarlar</h2></div>'+
+  '<div class="card fg"><label><span class="lb">Klinik / muayenehane adı</span><input class="in" id="ak" value="'+esc(db.ayar.klinik)+'"></label><label><span class="lb">Doktor adı</span><input class="in" id="ad" value="'+esc(db.ayar.doktor)+'"></label></div>'+
+  '<div class="card fg"><h3 class="fw">SMS hatırlatma (İleti Merkezi)</h3><label class="fw" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="smsAcik"'+(db.ayar.smsAcik?' checked':'')+'> Randevudan bir gün önce hastaya SMS gönder</label>'+
+  '<label><span class="lb">Servis adresi</span><input class="in" data-k="smsUrl" placeholder="https://…vercel.app/api/sms" value="'+esc(db.ayar.smsUrl)+'"></label>'+
+  '<label><span class="lb">Erişim anahtarı</span><input class="in" type="password" data-k="smsToken" value="'+esc(db.ayar.smsToken)+'"></label>'+
+  '<label><span class="lb">Gönderim saati (randevudan bir gün önce)</span><input class="in" type="time" data-k="smsSaat" value="'+esc(sa('smsSaat'))+'"></label>'+
+  '<label class="fw"><span class="lb">Mesaj metni</span><textarea class="in" data-k="smsSablon">'+esc(sa('smsSablon'))+'</textarea><small>{ad}, {tarih}, {saat} ve {klinik} yerine ilgili bilgiler yazılır. Telefon numarası olmayan hastalara SMS gitmez.</small></label></div>'+
+  '<div class="card"><h3>Yedek</h3><p><small>Veriler yalnızca bu cihazın tarayıcısında saklanır, sunucuya gönderilmez. Başka cihaza taşımak için yedek alın.</small></p><div class="bt" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn" data-a="yedek">Dosyaya yedekle</button><button class="btn b2" data-a="yukle">Yedeği yükle</button><input type="file" id="yf" accept=".json" hidden></div></div>'+
+  '<div class="card"><h3>Gizlilik</h3><small>Yedek dosyası sağlık verisi ve TC kimlik numaraları içerir (KVKK kapsamında özel nitelikli kişisel veri). Dosyayı güvenli saklayın, GitHub deposuna yüklemeyin. Ortak bir bilgisayarda çalışıyorsanız işiniz bitince tarayıcı verilerini temizleyin.</small></div>'+
+  '<div class="card"><button class="btn b2" data-a="sil" style="color:var(--red)">Tüm verileri sil</button></div>';
+
+const NV=[['randevu','Randevu','cal'],['takvim','Takvim','grid'],['hastalar','Hastalar','users'],['takip','Takip','doc'],['ayar','Ayarlar','sl']];
+const nv=x=>'<button class="nv'+(ui.tab===x[0]?' on':'')+'" data-a="nav" data-t="'+x[0]+'">'+ic(x[2])+'<span>'+x[1]+'</span></button>';
+const ust=()=>'<div class="top"><div class="lg">+</div><div><b>'+esc(db.ayar.klinik||'Hasta Takip')+'</b><small>'+esc(db.ayar.doktor?db.ayar.doktor+' · ':'')+new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',weekday:'long'})+'</small></div><button class="gear" data-a="nav" data-t="ayar" aria-label="Ayarlar">'+ic('sl')+'</button></div>';
+
+function render(){
+  const t=ui.tab;
+  const m=t==='randevu'?randevuV():t==='takvim'?takvimV():t==='ayar'?ayarV():'<div class="split '+(t==='takip'?'s-t':'s-h')+'"><div class="pl">'+listV()+'</div><div class="pd">'+detV()+'</div></div>';
+  const a=$('#app');a.dataset.t=t;
+  a.innerHTML='<aside class="side">'+NV.map(nv).join('')+'<button class="btn" data-a="yeniR" style="margin-top:14px">+ Randevu</button><button class="btn b2" data-a="yeniM">+ Muayene</button></aside>'+
+    '<main>'+ust()+(db.ornek?'<div class="bnr"><span>Örnek verilerle açıldı. Her şeye dokunabilirsiniz.</span><button data-a="baslat">Kendi verimle başla</button></div>':'')+m+'</main>'+
+    '<nav class="bn">'+nv(NV[0])+nv(NV[1])+'<button class="fab" data-a="yeniR" aria-label="Yeni randevu">'+ic('plus')+'</button>'+nv(NV[2])+nv(NV[3])+'</nav>';
+  const d=t==='randevu'&&$('.dy.on');if(d)d.scrollIntoView({inline:'center',block:'nearest'});
+}
+
+const kapat=()=>{const o=$('#ov');o.classList.remove('on');o.innerHTML=''};
+function sheet(t,body,ok,del){
+  const o=$('#ov');
+  o.innerHTML='<div class="sh"><div class="hd" style="margin-top:0"><h2>'+t+'</h2><button class="x" type="button" data-a="kapat" aria-label="Kapat">×</button></div><form id="fm">'+body+'<div class="er" id="er"></div><div class="bt">'+(del?'<button type="button" class="btn b2 dl" id="dl">Sil</button>':'')+'<button class="btn">Kaydet</button></div></form></div>';
+  o.classList.add('on');
+  $('#fm').onsubmit=e=>{e.preventDefault();const r=ok(Object.fromEntries(new FormData(e.target)));if(r){const er=$('#er');er.innerHTML=r;er.scrollIntoView({block:'nearest'})}else{kapat();render()}};
+  if(del)$('#dl').onclick=del;
+  const first=$('#fm input,#fm select');if(first&&innerWidth>700)first.focus();
+}
+const fld=(l,n,v,x)=>'<label'+(x&&x.w?' class="fw"':'')+'><span class="lb">'+l+'</span><input class="in" name="'+n+'" value="'+esc(v)+'"'+((x&&x.a)||'')+'></label>';
+const area=(l,n,v,h)=>'<label class="fw"><span class="lb">'+l+'</span><textarea class="in" name="'+n+'"'+(h?' style="min-height:'+h+'px"':'')+'>'+esc(v)+'</textarea></label>';
+
+function hastaForm(id){ui.fid=id;
+  const p=hp(id)||{};
+  sheet(id?'Hasta bilgileri':'Yeni hasta',
+    '<div class="fg">'+fld('Ad soyad *','ad',p.ad,{w:1,a:' required'})+fld('TC kimlik no','tc',p.tc,{a:' inputmode="numeric" maxlength="11"'})+fld('Doğum tarihi','dogum',p.dogum,{a:' type="date"'})+fld('Telefon','tel',p.tel,{a:' type="tel"'})+
+    '<label><span class="lb">Cinsiyet</span><select class="in" name="cins">'+['','Kadın','Erkek'].map(x=>'<option'+(x===(p.cins||'')?' selected':'')+'>'+x+'</option>').join('')+'</select></label>'+
+    area('Alerji / kronik hastalık / özel not','not',p.not)+'</div>',
+    d=>{
+      d.ad=d.ad.trim().replace(/\s+/g,' ');d.tc=d.tc.trim();
+      if(!d.ad)return'Ad soyad gerekli.';
+      if(d.tc&&!tcOk(d.tc))return'TC kimlik numarası geçersiz. 11 haneyi kontrol edin.';
+      const c=d.tc&&db.hasta.find(x=>x.tc===d.tc&&x.id!==id);if(c)return dupMsg(c);
+      if(id)Object.assign(p,d);else{const n=Object.assign({id:uid()},d);db.hasta.push(n);ui.sel=n.id;ui.tab='takip'}
+      save();
+    },
+    id&&(()=>{if(confirm('Hasta ve tüm muayene kayıtları silinsin mi?')){db.hasta=db.hasta.filter(x=>x.id!==id);db.muayene=db.muayene.filter(m=>m.pid!==id);db.randevu.filter(r=>r.pid===id).forEach(smsIptal);db.randevu=db.randevu.filter(r=>r.pid!==id);ui.sel=null;ui.tab='hastalar';save();kapat();render()}}));
+}
+function muayeneForm(id,pid,r){
+  if(!db.hasta.length)return alert('Önce Hastalar bölümünden bir hasta ekleyin.');
+  const n=new Date(),m=db.muayene.find(x=>x.id===id)||(r?{pid:r.pid,tarih:r.tarih,sikayet:r.neden}:{pid:pid||ui.sel,tarih:iso(n)+'T'+n.toTimeString().slice(0,5)});
+  sheet(id?'Muayene kaydı':'Yeni muayene',
+    '<div class="fg"><label class="fw"><span class="lb">Hasta</span><select class="in" name="pid">'+db.hasta.map(p=>'<option value="'+p.id+'"'+(p.id===m.pid?' selected':'')+'>'+esc(p.ad)+'</option>').join('')+'</select></label>'+
+    fld('Geliş tarihi ve saati','tarih',m.tarih,{a:' type="datetime-local" required'})+fld('Kontrol tarihi (randevu olarak eklenir)','kontrol',m.kontrol,{a:' type="date"'})+
+    fld('Şikâyet','sikayet',m.sikayet,{w:1})+area('İstenen tetkik','tetkik',m.tetkik)+area('Bulgu','bulgu',m.bulgu,170)+area('Yapılan işlem','islem',m.islem)+'</div>',
+    d=>{if(id)Object.assign(m,d);else db.muayene.push(Object.assign({id:uid()},d));if(r){r.durum='bitti';smsIptal(r)}kontrolR(d);ui.sel=d.pid;save()},
+    id&&(()=>{if(confirm('Bu muayene kaydı silinsin mi?')){db.muayene=db.muayene.filter(x=>x.id!==id);save();kapat();render()}}));
+}
+const DEF={smsSaat:'10:00',smsSablon:'Sayın {ad}, {tarih} saat {saat} için {klinik} randevunuzu hatırlatırız. Gelemeyecekseniz lütfen önceden haber veriniz.'};
+const sa=k=>db.ayar[k]||DEF[k];
+const pad=n=>String(n).padStart(2,'0');
+const smsN=r=>r.sms?(r.sms.durum==='hata'?' · SMS gönderilemedi':' · SMS planlandı'):'';
+const dupMsg=c=>'Bu TC kimlik numarası zaten kayıtlı: <b>'+esc(c.ad)+'</b>. Aynı hasta ikinci kez eklenemez.<br><button type="button" class="btn b2" data-a="ac" data-i="'+c.id+'" style="margin-top:8px">Mevcut hastayı aç</button>';
+const smsApi=b=>fetch(db.ayar.smsUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(db.ayar.smsToken||'')},body:JSON.stringify(b)}).then(r=>r.json().catch(()=>({})).then(j=>{if(!r.ok||!j.ok)throw new Error(j.hata||'SMS servisi yanıt vermedi');return j}));
+function smsIptal(r){if(r&&r.sms){if(r.sms.id&&db.ayar.smsUrl)smsApi({islem:'iptal',id:r.sms.id}).catch(()=>{});delete r.sms}}
+function smsGuncelle(r){
+  const p=hp(r.pid)||{},g=r.tarih.slice(0,10),now=new Date();
+  if(r.sms&&r.sms.id&&r.sms.tarih===r.tarih&&r.sms.tel===p.tel&&r.durum==='bekliyor'&&!r.smsYok)return;
+  smsIptal(r);
+  if(!db.ayar.smsAcik||!db.ayar.smsUrl||r.smsYok||r.durum!=='bekliyor'||!p.tel||new Date(r.tarih)<=now)return;
+  const hm=sa('smsSaat').split(':'),z=new Date(gunEkle(g,-1)+'T'+pad(hm[0])+':'+pad(hm[1]));
+  if(z<=now&&g<=iso(now))return;
+  const zs=z>now?pad(z.getDate())+'/'+pad(z.getMonth()+1)+'/'+z.getFullYear()+' '+pad(z.getHours())+':'+pad(z.getMinutes()):'';
+  const mesaj=sa('smsSablon').replace(/\{ad\}/g,p.ad).replace(/\{tarih\}/g,trd(g)).replace(/\{saat\}/g,r.tarih.slice(11,16)).replace(/\{klinik\}/g,db.ayar.klinik||'muayenehane');
+  smsApi({islem:'planla',tel:p.tel,mesaj:mesaj,zaman:zs}).then(j=>{r.sms={id:j.id,tarih:r.tarih,tel:p.tel,durum:'planlandı'}}).catch(e=>{r.sms={durum:'hata',hata:e.message}}).then(()=>{save();render()});
+}
+const dolu=(z,id)=>db.randevu.find(x=>x.id!==id&&x.durum!=='iptal'&&x.tarih===z);
+function cakisma(c,g){
+  setGun(g);
+  return '<b>'+c.tarih.slice(11,16)+' saatinde zaten bir randevu var ('+esc((hp(c.pid)||{}).ad)+').</b> Randevu eklenmedi, lütfen başka bir saat seçin.'+
+    '<div class="pg"><b>'+trd(g)+' günün programı</b>'+rg(g).map(x=>'<div'+(x.id===c.id?' class="cf"':'')+'><span>'+x.tarih.slice(11,16)+'</span><span>'+esc((hp(x.pid)||{}).ad)+' · '+x.durum+'</span></div>').join('')+'</div>';
+}
+function kontrolR(d){
+  if(!d.kontrol||db.randevu.some(x=>x.pid===d.pid&&x.tarih.slice(0,10)===d.kontrol))return;
+  for(let h=540;h<=1080;h+=30){const z=d.kontrol+'T'+String(h/60|0).padStart(2,'0')+':'+String(h%60).padStart(2,'0');
+    if(!dolu(z)){const n={id:uid(),pid:d.pid,tarih:z,neden:'Kontrol',durum:'bekliyor'};db.randevu.push(n);smsGuncelle(n);return}}
+}
+function randevuForm(id,g){
+  if(!db.hasta.length)return alert('Önce Hastalar bölümünden bir hasta ekleyin.');
+  const r=db.randevu.find(x=>x.id===id)||{pid:ui.sel,tarih:(g||ui.gun)+'T09:00',durum:'bekliyor'};
+  sheet(id?'Randevu':'Yeni randevu',
+    '<div class="fg"><label class="fw"><span class="lb">Hasta</span><select class="in" name="pid">'+db.hasta.map(p=>'<option value="'+p.id+'"'+(p.id===r.pid?' selected':'')+'>'+esc(p.ad)+'</option>').join('')+'</select></label>'+
+    fld('Tarih ve saat','tarih',r.tarih,{a:' type="datetime-local" required'})+
+    '<label><span class="lb">Durum</span><select class="in" name="durum">'+[['bekliyor','Bekliyor'],['bitti','Tamamlandı'],['iptal','İptal']].map(x=>'<option value="'+x[0]+'"'+(x[0]===r.durum?' selected':'')+'>'+x[1]+'</option>').join('')+'</select></label>'+
+    fld('Randevu nedeni / not','neden',r.neden,{w:1})+(db.ayar.smsAcik?'<label class="fw" style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="smsg"'+(r.smsYok?'':' checked')+'> Bir gün önce hatırlatma SMS’i gönder</label>':'')+(id?'<button type="button" class="btn b2 fw" data-a="muayR" data-i="'+id+'">Muayene kaydı gir</button>'+(r.durum==='bitti'?'':'<button type="button" class="btn fw" style="background:var(--gr)" data-a="tamam" data-i="'+id+'">✓ Tamamlandı olarak işaretle</button>'):'')+'</div>',
+    d=>{const c=d.durum!=='iptal'&&dolu(d.tarih,id);if(c)return cakisma(c,d.tarih.slice(0,10));
+      const sg=d.smsg;delete d.smsg;let k=r;if(id)Object.assign(r,d);else{k=Object.assign({id:uid()},d);db.randevu.push(k)}if(db.ayar.smsAcik)k.smsYok=!sg;ui.sel=d.pid;setGun(d.tarih.slice(0,10));save();smsGuncelle(k)},
+    id&&(()=>{if(confirm('Bu randevu silinsin mi?')){smsIptal(db.randevu.find(x=>x.id===id));db.randevu=db.randevu.filter(x=>x.id!==id);save();kapat();render()}}));
+}
+function temizle(msg){if(confirm(msg)){db={ayar:db.ayar,hasta:[],muayene:[],randevu:[]};ui.sel=null;save();render()}}
+
+document.addEventListener('click',e=>{
+  if(e.target.id==='ov')return kapat();
+  if(e.target.closest('a'))return;
+  const el=e.target.closest('[data-a]');if(!el)return;
+  const i=el.dataset.i,A={
+    nav:()=>{ui.tab=el.dataset.t;render()},
+    tamam:()=>{const r=db.randevu.find(x=>x.id===i);if(r){r.durum='bitti';smsIptal(r);save()}kapat();render()},
+    ac:()=>{kapat();ui.sel=i;ui.tab='takip';render()},
+    gun:()=>{setGun(i);render()},gd:()=>{setGun(gunEkle(ui.gun,Number(i)));render()},
+    ayg:()=>{const d=new Date(ui.cy,ui.cm+Number(i),1);ui.cy=d.getFullYear();ui.cm=d.getMonth();render()},
+    yeniR:()=>randevuForm(null,el.dataset.g),duzR:()=>randevuForm(i),
+    muayR:()=>{const r=db.randevu.find(x=>x.id===i);kapat();muayeneForm(null,r.pid,r)},
+    sel:()=>{ui.sel=i;ui.tab='takip';render()},
+    geri:()=>{ui.tab='hastalar';render()},
+    yeniH:()=>hastaForm(),duzH:()=>hastaForm(i),
+    yeniM:()=>muayeneForm(null,i),duzM:()=>muayeneForm(i),
+    kapat,
+    baslat:()=>temizle('Örnek veriler silinip boş kayıtla başlanacak. Devam edilsin mi?'),
+    sil:()=>temizle('Tüm hasta ve muayene kayıtları kalıcı olarak silinecek. Önce yedek aldınız mı? Devam edilsin mi?'),
+    yukle:()=>$('#yf').click(),
+    yedek:()=>{const u=URL.createObjectURL(new Blob([JSON.stringify(db,null,1)],{type:'application/json'})),l=document.createElement('a');l.href=u;l.download='hasta-takip-yedek-'+iso(new Date())+'.json';l.click();URL.revokeObjectURL(u)}
+  };
+  if(A[el.dataset.a])A[el.dataset.a]();
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='q'){ui.q=t.value;$('#ll').innerHTML=lis()}
+  else if(t.id==='ak'||t.id==='ad'){db.ayar[t.id==='ak'?'klinik':'doktor']=t.value;save()}
+  else if(t.dataset.k){db.ayar[t.dataset.k]=t.type==='checkbox'?t.checked:t.value;save()}
+  else if(t.name==='tc'){const v=t.value.trim(),c=v.length===11&&db.hasta.find(x=>x.tc===v&&x.id!==ui.fid);$('#er').innerHTML=c?dupMsg(c):''}
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='cm'||e.target.id==='cy'){ui[e.target.id]=+e.target.value;return render()}
+  if(e.target.id!=='yf'||!e.target.files[0])return;
+  e.target.files[0].text().then(t=>{
+    const d=JSON.parse(t);if(!Array.isArray(d.hasta)||!Array.isArray(d.muayene))throw 0;
+    if(confirm('Mevcut kayıtların yerine yedekteki '+d.hasta.length+' hasta ve '+d.muayene.length+' muayene yüklensin mi?')){
+      db={ayar:Object.assign({klinik:'Muayenehane',doktor:''},d.ayar),hasta:d.hasta,muayene:d.muayene,randevu:d.randevu||[]};ui.sel=null;save();render();
+    }
+  }).catch(()=>alert('Yedek dosyası okunamadı. Bu uygulamadan alınmış bir .json dosyası seçin.'));
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')kapat()});
+let sx=null,sy=0;
+document.addEventListener('touchstart',e=>{if(e.target.closest('[data-sw]')){sx=e.touches[0].clientX;sy=e.touches[0].clientY}else sx=null},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(sx==null)return;
+  const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;
+  if(Math.abs(dx)>70&&Math.abs(dx)>2*Math.abs(dy)){setGun(gunEkle(ui.gun,dx<0?1:-1));render()}
+});
+render();
+</script>
+</body>
+</html>
